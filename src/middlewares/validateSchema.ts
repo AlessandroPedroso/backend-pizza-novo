@@ -10,6 +10,7 @@ export const validateSchema =
         query: req.query,
         params: req.params,
       });
+
       return next();
     } catch (error) {
       if (error instanceof ZodError) {
