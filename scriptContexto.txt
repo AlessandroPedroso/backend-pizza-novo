@@ -1,0 +1,11 @@
+Gere um documento de contexto do projeto em .md deve conter todas especificações do projeto como arquitetura que estamos usando, endpoints, organizações de pastas, versoes usadas de cada biblioteca, modelagem do banco de dados, validação em schema que estamos usando, middlewares
+
+Exemplo Arquitetura:
+Rotas > Controller o controller recebe as requisições e passa para os > service faz a logica comunica com o banco, faz a operação e devolver para o controller e o controller retorna para o usuário.
+
+--------------------------------------------------
+Crie um endpoint /category (GET) para listar todas categorias cadastradas no banco.
+
+Esse enpoint o usuario precisa estar logado mas não precisa ser admin.
+siga as boas praticas e nossa arquitetura, atenção usando nosso documento de contexto o readme.md
+atenção ao controller, service e route

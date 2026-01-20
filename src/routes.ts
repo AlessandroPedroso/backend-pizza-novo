@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { isAdmin } from "../src/middlewares/isAdmin";
 import { CreateCategoryController } from "./controllers/category/CreateCategoryController";
+import { ListCategoryController } from "./controllers/category/ListCategoryController";
+import { CreateProductController } from "./controllers/product/CreateProductController";
 import { AuthUserController } from "./controllers/user/AuthUserController";
 import { CreateUserController } from "./controllers/user/CreateUserController";
 import { DetailUserController } from "./controllers/user/DetailUserController";
@@ -30,11 +32,21 @@ router.get("/me", isAuthenticated, new DetailUserController().handle);
 
 // Rotas Categorias
 router.post(
-  "/categories",
+  "/category",
   isAuthenticated,
   isAdmin,
   validateSchema(createCategorySchema),
   new CreateCategoryController().handle,
+);
+
+router.get("/category", isAuthenticated, new ListCategoryController().handle);
+
+// Rotas Produtos
+router.post(
+  "/product",
+  isAuthenticated,
+  isAdmin,
+  new CreateProductController().handle,
 );
 
 export { router };
