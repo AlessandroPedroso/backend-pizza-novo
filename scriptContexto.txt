@@ -9,3 +9,81 @@ Crie um endpoint /category (GET) para listar todas categorias cadastradas no ban
 Esse enpoint o usuario precisa estar logado mas não precisa ser admin.
 siga as boas praticas e nossa arquitetura, atenção usando nosso documento de contexto o readme.md
 atenção ao controller, service e route
+
+--------------------------------------------------
+
+a atualize nosso documento de contexto agora com cpm as novas rotas de category e também rotas de product
+
+--------------------------------------------------
+
+Crie agora a rota endpoint /products (GET) para listar todos os produtos cadastrados, espere receber query param true ou false para filtrar sempre na busca a propriedade disabled dos produtos.
+Exemplo: /products?disabled=false para buscar todos os disabled false e também para true mesma coisa e caso o usuario nao envie o query params entao coloque o valor padrao disabled false
+
+atenção as boas praticas e nossa arquitetura e arquivos consulte o contexto para entender nosso projeto.
+
+---------------------------------------------------
+
+Crie agora a rota endpoint para /category (Delete) para deletar uma categoria especifica, recebendo o id da categorya por uma queryparams, somente um admin vai conseguir deletar uma categoria, tambem quando deletar uma categorya preciso que seja excluido os produtos que tenha essa categoria.
+atenção as boas praticas de nossa arquitetura e arquivos consulte o contexto para entender nosso projeto.
+
+---------------------------------------------------
+
+Crie a rota para buscar todos os produtos de uma categoria especifica.
+
+- Endpoint: /category/products
+- Precisa estar apenas logado para poder fazer essa requisição.
+- precisa receber via query param o category_id string
+- Atenção a nossa arquitetura e caso necessario consulte nosso contexto PROJETO_CONTEXTO.md
+
+----------------------------------------------------
+
+Crie a rota para criar uma order (POST) usuario deve fornecer table int
+
+Endpoint: /order
+
+Precisa estar apenas logado para poder fazer essa requisição.
+
+Atenção a nossa arquitetura e caso necessario consulte nosso contexto PROJETO_CONTEXTO.md
+
+
+-----------------------------------------------------
+
+Vamos criar a rota /order/remove vai ser a rota para deletar item de uma order.
+
+endpoint: /order/remove
+
+Deve enviar o item_id atavés do query param
+
+metodo DELETE
+
+Verificar se o item existe antes de deletar
+
+ir ate a table item e deletar o item
+
+segue a arquitetura do projeto que criamos no contexto
+
+-------------------------------------------------------
+
+Vamos criar a rota /order/detail vai ser a rota para buscar os detalhes de uma order_id.
+
+endpoint: /order/remove
+
+Deve enviar o order_id atavés do query param
+metodo GET
+Verificar se a order existe antes de consutar
+middleware apenas estar autenticado
+Objetivo: devemos buscar todos os detalhes da order_id
+segue a arquitetura do projeto que criamos no contexto
+
+
+-------------------------------------------------------
+Vamos criar a rota /order/detail vai ser a rota para buscar os detalhes de uma order_id.
+
+endpoint: /order/remove
+
+Deve enviar o order_id atavés do query param
+metodo GET
+Verificar se a order existe antes de consutar
+middleware apenas estar autenticado
+Objetivo: devemos buscar todos os detalhes da order_id
+segue a arquitetura do projeto que criamos no contexto

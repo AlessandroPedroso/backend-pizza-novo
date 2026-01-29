@@ -1,6 +1,6 @@
 # 📋 Documentação do Projeto - Backend Pizza
 
-> **Data de atualização:** 19 de Janeiro de 2026
+> **Data de atualização:** 29 de Janeiro de 2026
 
 ---
 
@@ -51,11 +51,29 @@ backend/
 │   │   └── express/
 │   │       └── index.d.ts         # Tipagem customizada do Express (user_id no Request)
 │   │
-│   ├── config/                    # Configurações gerais (vazio atualmente)
+│   ├── config/                    # Configurações gerais
+│   │   ├── cloundinary.ts         # Configuração do Cloudinary para upload de imagens
+│   │   └── multer.ts              # Configuração do Multer para upload de arquivos
 │   │
 │   ├── controllers/               # Controllers organizados por domínio
 │   │   ├── category/
-│   │   │   └── CreateCategoryController.ts
+│   │   │   ├── CreateCategoryController.ts
+│   │   │   ├── DeleteCategoryController.ts
+│   │   │   └── ListCategoryController.ts
+│   │   ├── order/
+│   │   │   ├── AddItemOrderController.ts
+│   │   │   ├── CreateOrderController.ts
+│   │   │   ├── DeleteOrderController.ts
+│   │   │   ├── DetailOrderController.ts
+│   │   │   ├── FinishOrderController.ts
+│   │   │   ├── ListOrdersControllers.ts
+│   │   │   ├── RemoveItemOrderController.ts
+│   │   │   └── SendOrderController.ts
+│   │   ├── product/
+│   │   │   ├── CreateProductController.ts
+│   │   │   ├── DeleteProductController.ts
+│   │   │   ├── ListProductsByCategoryController.ts
+│   │   │   └── ListProductsController.ts
 │   │   └── user/
 │   │       ├── AuthUserController.ts
 │   │       ├── CreateUserController.ts
@@ -74,11 +92,29 @@ backend/
 │   │
 │   ├── schemas/                   # Schemas de validação Zod
 │   │   ├── categorySchema.ts
+│   │   ├── orderSchema.ts
+│   │   ├── productSchema.ts
 │   │   └── userSchema.ts
 │   │
 │   ├── services/                  # Services organizados por domínio
 │   │   ├── category/
-│   │   │   └── CreateCategoryService.ts
+│   │   │   ├── CreateCategoryService.ts
+│   │   │   ├── DeleteCategoryService.ts
+│   │   │   └── ListCategoryService.ts
+│   │   ├── order/
+│   │   │   ├── AddItemOrderService.ts
+│   │   │   ├── CreateOrderService.ts
+│   │   │   ├── DeleteOrderService.ts
+│   │   │   ├── DetailOrderService.ts
+│   │   │   ├── FinishOrderService.ts
+│   │   │   ├── ListOrdersService.ts
+│   │   │   ├── RemoveItemOrderService.ts
+│   │   │   └── SendOrderService.ts
+│   │   ├── product/
+│   │   │   ├── CreateProductService.ts
+│   │   │   ├── DeleteProductService.ts
+│   │   │   ├── ListProductsByCategoryService.ts
+│   │   │   └── ListProductsService.ts
 │   │   └── user/
 │   │       ├── AuthUserService.ts
 │   │       ├── CreateUserService.ts
@@ -110,6 +146,8 @@ backend/
 | `cors`               | ^2.8.5  | Middleware para CORS                         |
 | `dotenv`             | ^17.2.3 | Carrega variáveis de ambiente                |
 | `tsx`                | ^4.21.0 | Execução de TypeScript sem compilação prévia |
+| `multer`             | ^2.0.2  | Middleware para upload de arquivos           |
+| `cloudinary`         | ^2.9.0  | SDK para upload de imagens na nuvem          |
 
 ### Dependências de Desenvolvimento
 
@@ -244,9 +282,35 @@ enum Role {
 
 ### Categorias
 
-| Método | Rota          | Descrição            | Middlewares                                                          |
-| ------ | ------------- | -------------------- | -------------------------------------------------------------------- |
-| POST   | `/categories` | Criar nova categoria | `isAuthenticated`, `isAdmin`, `validateSchema(createCategorySchema)` |
+| Método | Rota        | Descrição               | Middlewares                                                          |
+| ------ | ----------- | ----------------------- | -------------------------------------------------------------------- |
+| POST   | `/category` | Criar nova categoria    | `isAuthenticated`, `isAdmin`, `validateSchema(createCategorySchema)` |
+| GET    | `/category` | Listar todas categorias | `isAuthenticated`                                                    |
+| DELETE | `/category` | Deletar categoria       | `isAuthenticated`, `isAdmin`, `validateSchema(deleteCategorySchema)` |
+
+### Produtos
+
+| Método | Rota                 | Descrição                     | Middlewares                                                                                  |
+| ------ | -------------------- | ----------------------------- | -------------------------------------------------------------------------------------------- |
+| POST   | `/product`           | Criar novo produto            | `isAuthenticated`, `isAdmin`, `upload.single("file")`, `validateSchema(createProductSchema)` |
+| GET    | `/products`          | Listar todos os produtos      | `isAuthenticated`, `validateSchema(listProductsSchema)`                                      |
+| DELETE | `/products`          | Deletar produto               | `isAuthenticated`, `isAdmin`, `validateSchema(deleteProductSchema)`                          |
+| GET    | `/category/products` | Listar produtos por categoria | `isAuthenticated`, `validateSchema(listProductsByCategorySchema)`                            |
+
+> **Nota:** O endpoint POST `/product` utiliza `multipart/form-data` para envio da imagem do produto.
+
+### Pedidos (Orders)
+
+| Método | Rota            | Descrição                         | Middlewares                                            |
+| ------ | --------------- | --------------------------------- | ------------------------------------------------------ |
+| POST   | `/order`        | Criar novo pedido                 | `isAuthenticated`, `validateSchema(createOrderSchema)` |
+| DELETE | `/order`        | Deletar pedido                    | `isAuthenticated`, `validateSchema(deleteOrderSchema)` |
+| GET    | `/orders`       | Listar pedidos (não rascunho)     | `isAuthenticated`                                      |
+| POST   | `/order/add`    | Adicionar item ao pedido          | `isAuthenticated`, `validateSchema(addItemSchema)`     |
+| DELETE | `/order/remove` | Remover item do pedido            | `isAuthenticated`, `validateSchema(removeItemSchema)`  |
+| GET    | `/order/detail` | Detalhes do pedido                | `isAuthenticated`, `validateSchema(detailOrderSchema)` |
+| PUT    | `/order/send`   | Enviar pedido (tirar do rascunho) | `isAuthenticated`, `validateSchema(sendOrderSchema)`   |
+| PUT    | `/order/finish` | Finalizar pedido                  | `isAuthenticated`, `validateSchema(finishOrderSchema)` |
 
 ---
 
@@ -361,6 +425,179 @@ Valida o body, query e params da requisição usando schemas Zod.
 }
 ```
 
+#### `deleteCategorySchema`
+
+```typescript
+{
+  query: {
+    category_id: string; // UUID da categoria
+  }
+}
+```
+
+### Product Schemas
+
+#### `createProductSchema`
+
+```typescript
+{
+  body: {
+    name: string; // obrigatório, min 1 caractere
+    price: string; // obrigatório, apenas dígitos (centavos)
+    description: string; // obrigatório, min 1 caractere
+    category_id: string; // obrigatório, UUID da categoria
+  }
+}
+```
+
+#### `listProductsSchema`
+
+```typescript
+{
+  query: {
+    page?: string; // página (default: "1")
+    take?: string; // quantidade por página (default: "10")
+  }
+}
+```
+
+#### `deleteProductSchema`
+
+```typescript
+{
+  query: {
+    product_id: string; // UUID do produto
+  }
+}
+```
+
+#### `listProductsByCategorySchema`
+
+```typescript
+{
+  query: {
+    category_id: string; // UUID da categoria
+  }
+}
+```
+
+> **Nota:** O campo `price` é enviado como string e convertido para `Int` (centavos) no controller.
+
+### Order Schemas
+
+#### `createOrderSchema`
+
+```typescript
+{
+  body: {
+    table: number; // número da mesa (min 1)
+    name?: string; // nome do cliente (opcional)
+  }
+}
+```
+
+#### `deleteOrderSchema`
+
+```typescript
+{
+  query: {
+    order_id: string; // UUID do pedido
+  }
+}
+```
+
+#### `addItemSchema`
+
+```typescript
+{
+  body: {
+    order_id: string; // UUID do pedido
+    product_id: string; // UUID do produto
+    amount: number; // quantidade (min 1)
+  }
+}
+```
+
+#### `removeItemSchema`
+
+```typescript
+{
+  query: {
+    item_id: string; // UUID do item
+  }
+}
+```
+
+#### `detailOrderSchema`
+
+```typescript
+{
+  query: {
+    order_id: string; // UUID do pedido
+  }
+}
+```
+
+#### `sendOrderSchema`
+
+```typescript
+{
+  body: {
+    order_id: string; // UUID do pedido
+  }
+}
+```
+
+#### `finishOrderSchema`
+
+```typescript
+{
+  body: {
+    order_id: string; // UUID do pedido
+  }
+}
+```
+
+---
+
+## 📤 Upload de Arquivos
+
+### Configuração do Multer
+
+**Localização:** `src/config/multer.ts`
+
+```typescript
+export default {
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 4 * 1024 * 1024, // 4MB
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedMimes = ["image/jpeg", "image/jpg", "image/png"];
+    // Valida formato do arquivo
+  },
+};
+```
+
+**Características:**
+
+- Armazena arquivos na memória (buffer)
+- Limite de 4MB por arquivo
+- Formatos aceitos: JPEG, JPG, PNG
+
+### Configuração do Cloudinary
+
+**Localização:** `src/config/cloundinary.ts`
+
+Utilizado para armazenar imagens dos produtos na nuvem.
+
+**Funcionamento:**
+
+1. Imagem é recebida via Multer (buffer)
+2. Cria-se um stream do buffer
+3. Faz upload para o Cloudinary na pasta `products`
+4. URL segura é salva no banco de dados (campo `banner`)
+
 ---
 
 ## 🔐 Tipagem Customizada
@@ -433,6 +670,11 @@ npm run dev
 DATABASE_URL=postgresql://user:password@host:port/database
 JWT_SECRET=sua_chave_secreta
 PORT=3333 # opcional, default: 3333
+
+# Cloudinary (upload de imagens)
+CLOUDINARY_CLOUD_NAME=seu_cloud_name
+CLOUDINARY_API_KEY=sua_api_key
+CLOUDINARY_API_SECRET=sua_api_secret
 ```
 
 ---
